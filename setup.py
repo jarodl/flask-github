@@ -25,7 +25,6 @@ setup(
         'oauth2'
     ],
     classifiers=[
-        'Development Status :: 1 - Alpha',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',

@@ -147,6 +147,6 @@ class GithubAuth(object):
         org_members = json.loads(content)
         user = self.github_user()
         for member in org_members:
-            if member['login'] is user['login']:
+            if member['login'] == user['login']:
                 return True
         return False

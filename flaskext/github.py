@@ -64,7 +64,7 @@ class GithubAuth(object):
         """
         Makes a raw HTTP request and returns the response and content.
         """
-        http = Http()
+        http = Http(disable_ssl_certificate_validation=True)
         params.update({'access_token': self.get_access_token()})
         headers = {
             "Content-type": "application/x-www-form-urlencoded",

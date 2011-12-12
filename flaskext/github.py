@@ -54,8 +54,9 @@ class GithubAuth(object):
         """
         params = {
             'client_id': self.client_id,
-            'redirect_uri': callback_url
         }
+        if callback_url is not None:
+            params.update({'redirect_uri': callback_url})
         auth_url = self.base_auth_url + 'authorize?' + urlencode(params)
         return redirect(auth_url)
 

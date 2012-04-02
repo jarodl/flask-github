@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>flask-github by jarodl</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>flask-github</h1>
+        <p>Authenticate Flask applications with Github.</p>
+        <p class="view"><a href="https://github.com/jarodl/flask-github">View the Project on GitHub <small>jarodl/flask-github</small></a></p>
+        <ul>
+          <li><a href="https://github.com/jarodl/flask-github/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jarodl/flask-github/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jarodl/flask-github">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>Installation</h2>
+
+<pre><code>pip install flask-github
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>An example application is provided. Getting it up and running should be pretty straightforward:</p>
+
+<ol>
+<li>Create a new application on Github (or use an existing one)</li>
+<li>Add the <code>client_id</code> and <code>client_secret</code> to <code>config.json</code>
+</li>
+<li>
+<p>Start the server:</p>
+
+<pre><code>python example/example.py
+</code></pre>
+</li>
+</ol><h2>Example App URLs</h2>
+
+<p>Redirect the user to authenticate with Github:</p>
+
+<pre><code>http://localhost:5000/login
+</code></pre>
+
+<p>Check if the user is a member of an organization:</p>
+
+<pre><code>http://localhost:5000/orgs/&lt;organization_name&gt;
+</code></pre>
+
+<p>Check if the user belongs to a certain team:</p>
+
+<pre><code>http://localhost:5000/teams/&lt;team_id&gt;
+</code></pre>
+
+<h2>API Requests</h2>
+
+<p>After authenticating, this extension also provides methods for doing GET requests to the Github API as the authenticated user.</p>
+
+<pre><code>github = GithubAuth(
+    client_id='123456789',
+    client_secret='987654321',
+    session_key='user_id'
+)
+
+# returns the authenticated user
+github.get_github_user()
+
+# returns true if the authenticated user is a member of the organization
+github.has_org_access('mindsnacks')
+</code></pre>
+
+<h2>Options</h2>
+
+<ul>
+<li>
+<code>session_key</code> -- Key for the value stored in the session to determine if a user is logged in</li>
+<li>
+<code>client_id</code> -- Given by Github when creating an application</li>
+<li>
+<code>client_secret</code> -- Given by Github when creating an application</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jarodl">jarodl</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>

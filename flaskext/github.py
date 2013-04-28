@@ -46,7 +46,7 @@ class GithubAuth(object):
         self.get_access_token = f
         return f
 
-    def authorize(self, callback_url=None):
+    def authorize(self, callback_url=None, scope=None):
         """
         Redirect to Github and request access to a user's data. If a callback
         URL is not provided the URL configured in the Github settings for the
@@ -57,6 +57,8 @@ class GithubAuth(object):
         }
         if callback_url is not None:
             params.update({'redirect_uri': callback_url})
+        if scope is not None:
+            params.update({'scope': scope})
         auth_url = self.base_auth_url + 'authorize?' + urlencode(params)
         return redirect(auth_url)
 

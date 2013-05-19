@@ -6,7 +6,6 @@
     Authenticate users in your Flask app with Github.
 """
 import json
-import oauth2
 from httplib2 import Http
 from functools import wraps
 from urllib import urlencode

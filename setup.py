@@ -22,7 +22,6 @@ setup(
     platforms='any',
     install_requires=[
         'Flask',
-        'oauth2'
     ],
     classifiers=[
         'Environment :: Web Environment',
@@ -33,4 +32,3 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]
 )
-

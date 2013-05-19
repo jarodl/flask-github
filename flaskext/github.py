@@ -6,11 +6,13 @@
     Authenticate users in your Flask app with Github.
 """
 import json
-from httplib2 import Http
 from functools import wraps
 from urllib import urlencode
 from urlparse import parse_qs
+
 from flask import redirect, request
+from httplib2 import Http
+
 
 class GithubAuth(object):
     """
@@ -93,8 +95,8 @@ class GithubAuth(object):
             'client_id': self.client_id,
             'client_secret': self.client_secret
         }
-        resp, content = self.raw_request(self.base_auth_url, 'access_token',
-            params, "POST")
+        resp, content = self.raw_request(
+            self.base_auth_url, 'access_token', params, "POST")
         data = parse_qs(content)
         for k, v in data.items():
             if len(v) == 1:
@@ -102,9 +104,7 @@ class GithubAuth(object):
         return data
 
     def handle_invalid_response(self):
-        """
-        """
-        return None
+        pass
 
     def authorized_handler(self, f):
         """

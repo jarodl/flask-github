@@ -77,10 +77,12 @@ class GithubAuth(object):
         resp, content = http.request(url, method)
         return resp, content
 
-    def get_resource(self, resource, params={}):
+    def get_resource(self, resource, params=None):
         """
         Makes a raw HTTP GET request and returns the response and content.
         """
+        if params is None:
+            params = {}
         return self.raw_request(self.base_url, resource, params, "GET")
 
     def handle_response(self):

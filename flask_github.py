@@ -63,21 +63,25 @@ class GithubAuth(object):
         auth_url = self.base_auth_url + 'authorize?' + urlencode(params)
         return redirect(auth_url)
 
-    def raw_request(self, base_url, resource, params, method):
+    def raw_request(self, base_url, resource, params, method,
+                    access_token=None):
         """
         Makes a raw HTTP request and returns the response and content.
         """
         url = base_url + resource
-        params.update({'access_token': self.get_access_token()})
+        if params is None:
+            params = {}
+        if access_token is None:
+            access_token = self.get_access_token()
+        params.update({'access_token': access_token})
         return self.session.request(method, url, params)
 
-    def get_resource(self, resource, params=None):
+    def get_resource(self, resource, params=None, access_token=None):
         """
         Makes a raw HTTP GET request and returns the response and content.
         """
-        if params is None:
-            params = {}
-        response = self.raw_request(self.base_url, resource, params, "GET")
+        response = self.raw_request(
+            self.base_url, resource, params, "GET", access_token)
         return response, response.json()
 
     def handle_response(self):

@@ -83,7 +83,9 @@ class GithubAuth(object):
         """
         if params is None:
             params = {}
-        return self.raw_request(self.base_url, resource, params, "GET")
+        response, content = self.raw_request(
+            self.base_url, resource, params, "GET")
+        return response, json.loads(content)
 
     def handle_response(self):
         """
@@ -137,8 +139,7 @@ class GithubAuth(object):
         Requests the authenticated user's data from Github.
         """
         path = 'user'
-        resp, content = self.get_resource(path)
-        user = json.loads(content)
+        resp, user = self.get_resource(path)
         return user
 
     def has_org_access(self, organization):
@@ -147,8 +148,7 @@ class GithubAuth(object):
         organization.
         """
         path = 'orgs/' + organization + '/members'
-        resp, content = self.get_resource(path)
-        org_members = json.loads(content)
+        resp, org_members = self.get_resource(path)
         user = self.github_user()
         for member in org_members:
             if member['login'] == user['login']:

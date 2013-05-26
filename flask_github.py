@@ -5,13 +5,12 @@
 
     Authenticate users in your Flask app with Github.
 """
-import json
 from functools import wraps
 from urllib import urlencode
 from urlparse import parse_qs
 
+import requests
 from flask import redirect, request
-from httplib2 import Http
 
 
 class GithubAuth(object):
@@ -38,6 +37,7 @@ class GithubAuth(object):
         self.get_access_token = lambda: None
         self.base_url = 'https://api.github.com/'
         self.base_auth_url = 'https://github.com/login/oauth/'
+        self.session = requests.session()
 
     def access_token_getter(self, f):
         """
@@ -67,11 +67,9 @@ class GithubAuth(object):
         """
         Makes a raw HTTP request and returns the response and content.
         """
-        http = Http(disable_ssl_certificate_validation=True)
+        url = base_url + resource
         params.update({'access_token': self.get_access_token()})
-        url = base_url + resource + '?' + urlencode(params)
-        resp, content = http.request(url, method)
-        return resp, content
+        return self.session.request(method, url, params)
 
     def get_resource(self, resource, params=None):
         """
@@ -79,9 +77,8 @@ class GithubAuth(object):
         """
         if params is None:
             params = {}
-        response, content = self.raw_request(
-            self.base_url, resource, params, "GET")
-        return response, json.loads(content)
+        response = self.raw_request(self.base_url, resource, params, "GET")
+        return response, response.json()
 
     def handle_response(self):
         """

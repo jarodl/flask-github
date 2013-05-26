@@ -22,7 +22,7 @@ setup(
     platforms='any',
     install_requires=[
         'Flask',
-        'httplib2',
+        'requests',
     ],
     classifiers=[
         'Environment :: Web Environment',

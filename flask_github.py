@@ -5,13 +5,13 @@
 
     Authenticate users in your Flask app with Github.
 """
-import json
-import oauth2
-from httplib2 import Http
 from functools import wraps
 from urllib import urlencode
 from urlparse import parse_qs
+
+import requests
 from flask import redirect, request
+
 
 class GithubAuth(object):
     """
@@ -37,6 +37,7 @@ class GithubAuth(object):
         self.get_access_token = lambda: None
         self.base_url = 'https://api.github.com/'
         self.base_auth_url = 'https://github.com/login/oauth/'
+        self.session = requests.session()
 
     def access_token_getter(self, f):
         """
@@ -62,25 +63,26 @@ class GithubAuth(object):
         auth_url = self.base_auth_url + 'authorize?' + urlencode(params)
         return redirect(auth_url)
 
-    def raw_request(self, base_url, resource, params, method, accept='json'):
+    def raw_request(self, base_url, resource, params, method,
+                    access_token=None):
         """
         Makes a raw HTTP request and returns the response and content.
         """
-        http = Http(disable_ssl_certificate_validation=True)
-        params.update({'access_token': self.get_access_token()})
-        headers = {
-            "Content-type": "application/x-www-form-urlencoded",
-            "Accept": accept
-        }
-        url = base_url + resource + '?' + urlencode(params)
-        resp, content = http.request(url, method)
-        return resp, content
+        url = base_url + resource
+        if params is None:
+            params = {}
+        if access_token is None:
+            access_token = self.get_access_token()
+        params.update({'access_token': access_token})
+        return self.session.request(method, url, params)
 
-    def get_resource(self, resource, params={}):
+    def get_resource(self, resource, params=None, access_token=None):
         """
         Makes a raw HTTP GET request and returns the response and content.
         """
-        return self.raw_request(self.base_url, resource, params, "GET")
+        response = self.raw_request(
+            self.base_url, resource, params, "GET", access_token)
+        return response, response.json()
 
     def handle_response(self):
         """
@@ -94,18 +96,16 @@ class GithubAuth(object):
             'client_id': self.client_id,
             'client_secret': self.client_secret
         }
-        resp, content = self.raw_request(self.base_auth_url, 'access_token',
-            params, "POST")
-        data = parse_qs(content)
+        response = self.raw_request(
+            self.base_auth_url, 'access_token', params, "POST")
+        data = parse_qs(response.content)
         for k, v in data.items():
             if len(v) == 1:
                 data[k] = v[0]
         return data
 
     def handle_invalid_response(self):
-        """
-        """
-        return None
+        pass
 
     def authorized_handler(self, f):
         """
@@ -136,8 +136,7 @@ class GithubAuth(object):
         Requests the authenticated user's data from Github.
         """
         path = 'user'
-        resp, content = self.get_resource(path)
-        user = json.loads(content)
+        resp, user = self.get_resource(path)
         return user
 
     def has_org_access(self, organization):
@@ -146,8 +145,7 @@ class GithubAuth(object):
         organization.
         """
         path = 'orgs/' + organization + '/members'
-        resp, content = self.get_resource(path)
-        org_members = json.loads(content)
+        resp, org_members = self.get_resource(path)
         user = self.github_user()
         for member in org_members:
             if member['login'] == user['login']:

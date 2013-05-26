@@ -16,13 +16,13 @@ setup(
     author_email='jarodluebbert@gmail.com',
     description='Adds support for authorizing users with Github to Flask',
     long_description=__doc__,
-    packages=['flaskext'],
-    namespace_packages=['flaskext'],
+    py_modules=['flask_github'],
     zip_safe=False,
+    include_package_data=True,
     platforms='any',
     install_requires=[
         'Flask',
-        'oauth2'
+        'requests',
     ],
     classifiers=[
         'Environment :: Web Environment',
@@ -33,4 +33,3 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]
 )
-

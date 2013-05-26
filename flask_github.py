@@ -92,9 +92,9 @@ class GithubAuth(object):
             'client_id': self.client_id,
             'client_secret': self.client_secret
         }
-        resp, content = self.raw_request(
+        response = self.raw_request(
             self.base_auth_url, 'access_token', params, "POST")
-        data = parse_qs(content)
+        data = parse_qs(response.content)
         for k, v in data.items():
             if len(v) == 1:
                 data[k] = v[0]

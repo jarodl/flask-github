@@ -63,16 +63,12 @@ class GithubAuth(object):
         auth_url = self.base_auth_url + 'authorize?' + urlencode(params)
         return redirect(auth_url)
 
-    def raw_request(self, base_url, resource, params, method, accept='json'):
+    def raw_request(self, base_url, resource, params, method):
         """
         Makes a raw HTTP request and returns the response and content.
         """
         http = Http(disable_ssl_certificate_validation=True)
         params.update({'access_token': self.get_access_token()})
-        headers = {
-            "Content-type": "application/x-www-form-urlencoded",
-            "Accept": accept
-        }
         url = base_url + resource + '?' + urlencode(params)
         resp, content = http.request(url, method)
         return resp, content
